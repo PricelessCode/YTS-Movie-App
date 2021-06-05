@@ -7,82 +7,71 @@ import 'jquery-ui-dist/jquery-ui';
 class MovieList extends React.Component {
     state = {
         movies: this.props.moviesFromParent,
-        clicked: false,
+        isClicked: false,
         clickedImage: 0,
     }
 
-    
     componentDidUpdate = () => {
         if (this.state.movies !== this.props.moviesFromParent) {
             this.setState({movies: this.props.moviesFromParent});
             // console.log(this.state.movies);
-            
-            
         }
+    
+        $("#movDescription").draggable({axis: 'y'});
+        $('#coverImgDiv').css('background-image','url(' + this.state.movies[this.state.clickedImage].medium_cover_image +')');
     }
-
-    componentDidMount = () => { 
-        $(function () {
-            $("#movDescription").draggable({axis: 'y'});
-        });
-    }   
 
     imgOnClick = (e) => {
         // this.setState({clicked: true, clickedImage})
         console.log('Clicked!!', e.target.getAttribute('data-key'));
-        this.setState({clicked: true, clickedImage: e.target.getAttribute('data-key')})
+        this.setState({isClicked: true, clickedImage: e.target.getAttribute('data-key')});
     }
 
     render() {
+        const {isClicked, movies, clickedImage} = this.state;
         const movieImages = [];
         
-        const tmp = [
-            'https://yts.mx/assets/images/movies/avengers_endgame_2019/medium-cover.jpg',
-            'https://yts.mx/assets/images/movies/avengers_endgame_2019/medium-cover.jpg',
-            'https://yts.mx/assets/images/movies/avengers_endgame_2019/medium-cover.jpg',
-            'https://yts.mx/assets/images/movies/avengers_endgame_2019/medium-cover.jpg',
-            'https://yts.mx/assets/images/movies/avengers_endgame_2019/medium-cover.jpg'
-        ];
-
         console.log(this.state.movies);
-        // for(let i = 0; i < this.state.movies.length; i++) {
-        //     movieImages.push(<img key={i} class="col" src={'https://movie-app-2021.herokuapp.com/yts/' + this.state.movies[i].medium_cover_image.match(/assets.*/)} alt='yts movie snapshot'></img>);
-        // }
         
-        for(let i = 0; i < 5; i++) {
-            movieImages.push(<img key={i} data-key={i} class="" style={{width: '20%'}} onClick={this.imgOnClick} src={tmp[i]} alt='yts movie snapshot'></img>);
+        for(let i = 0; i < this.state.movies.length; i++) {
+            movieImages.push(<img key={i} data-key={i} class="" style={{width: (100 / this.state.movies.length) + '%'}} onClick={this.imgOnClick} src={movies[i].medium_cover_image} alt='yts movie snapshot'></img>);
         }
         
-        
-
         return (
             <div id='whole-movie-container'>
-                <div class="row">
-                    {movieImages}
-                </div>
+                <div id='prevImgs' class="row text-center">
+                        {movieImages}
+                    </div>
+                {isClicked ? (
+                    <>
+                    <div id='desc-container'>
+                        <div id='coverImgDiv'></div>
+                        <div id='movDescription'>
+                            <p id='releasedYear'>{movies[clickedImage].year} 개봉</p>
+                            <div class='row pt-2'>
+                                <h3>{movies[clickedImage].title}</h3>
+                            </div>
+                            <div class='row'>
+                                <p>{movies[clickedImage].genres.join(', ')}</p>
+                            </div>
+                            <div class='row mt-4'>
+                                <h4>영화 정보</h4>
+                            </div>
+                            <div class='row'>
+                                <p class='col-4 p-0'>{movies[clickedImage].runtime}분</p>
+                                <p class='col-4'>평점: {movies[clickedImage].rating}</p>
+                                <p class='col-4 text-right p-0'>좋아요: {movies[clickedImage].likes}</p>
+                            </div>
+                            <div class='row mt-4 mb-4'>
+                                <h4>줄거리</h4>
+                                <p>{movies[clickedImage].summary}</p>
+                            </div>
+                        </div>
+                    </div>
+                    </>
+                )
+                : null}
                 
-                <div id='coverImgDiv'></div>
-                <div id='movDescription'>
-                    <p id='releasedYear'>2010 개봉</p>
-                    <div class='row pt-2'>
-                        <h3>Inception</h3>
-                    </div>
-                    <div class='row'>
-                        <p>Action, Adventure, Crime, Mystery, Sci-Fi, Thriller</p>
-                    </div>
-                    <div class='row mt-4'>
-                        <h4>영화 정보</h4>
-                    </div>
-                    <div class='row'>
-                        <p class='col-4 p-0'>148분</p>
-                        <p class='col-4'>평점: 8.8</p>
-                        <p class='col-4 text-right p-0'>좋아요: 1959</p>
-                    </div>
-                    <div class='row mt-4'>
-                        <h4>줄거리</h4>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                    </div>
-                </div>
             </div>
         )
     }

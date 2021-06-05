@@ -5,8 +5,22 @@
     margin-bottom: 10px;
 }
 
+#prevImgs {
+    justify-content: center;
+    background-color: white;
+    margin:auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+
+}
+
 #whole-movie-container {
-    background-color: #000000;
+    background-color: white;
+}
+
+#desc-container {
+    background-color: black;
 }
 
 #coverImgDiv {

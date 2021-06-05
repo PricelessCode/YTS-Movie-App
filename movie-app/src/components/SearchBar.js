@@ -8,41 +8,72 @@ import './SearchBar.scss';
 let axios = require('axios');
 
 const SearchBar = () => {
-  const [movies, setMovies] = useState('');
+  let [movies, setMovies] = useState(null);
+  let [isSearched, setIsSearched] = useState(false);
+  let [isLoading, setIsLoading] = useState(false);
 
   const getSearchMovie = async () => {
     const ID_KEY = 'MPF85hV_M_MgoJFe46Ms';
     const SECRET_KEY = 'uSvgQms2A1';
   
-    try { 
+    try {
       console.log('Requested to the server!')
-          let result = await axios.get('https://movie-app-2021.herokuapp.com/yts/api/v2/list_movies.json?sort_by=like_count&order_by=desc&limit=5');
+          let result = await axios.get('https://yts.mx/api/v2/list_movies.json?sort_by=like_count&order_by=desc&limit=5');
+          let tmpMovies = result.data.data.movies;
+          
+          for (let i = 0; i < result.data.data.movies.length; i++) {
+            let likeObject= await axios.get('https://yts.mx/api/v2/movie_details.json?movie_id=' + tmpMovies[i].id);  
+            tmpMovies[i].likes = likeObject.data.data.movie.like_count;
+          }
+          
+          // let result = await axios.get('http://localhost:4000/yts');
           setMovies(result.data.data.movies);
           console.log(movies);
-        } catch (error) {
-          console.log(error);
-        }
+          setIsLoading(false);
+          
+    } catch (error) {
+      console.log(error);
+    }
   }; 
 
   const onSubmit = (e) => {
     e.preventDefault();
+    setIsSearched(true);
+    setIsLoading(true);
     getSearchMovie();
   };
+
+  function checkComponents() {
+    if (!isSearched) {
+      return null;
+    }
+
+    if (isLoading) {
+      return (
+        <div>
+          <div class="spinner-grow text-primary loader" role="status"></div>
+        </div>
+      );
+    } else {
+      return (
+        <MovieList moviesFromParent={movies}/>
+      );
+    }
+  }
 
   return (
     <div>
       <form className="SearchBar" onSubmit={onSubmit}>
         {/* TextField for Searching */}
-        <input
-          placeholder="입력포맷: <정렬기준> <검색개수> 예: like 5"
-        />
+        <input placeholder="입력포맷: <정렬기준> <검색개수> 예: like 5"/>
         
         {/* + Button */}
         <button type="submit">
           <MdAdd />
         </button>
       </form>
-      <MovieList moviesFromParent={movies}/>
+      {/* Conditional Rendering */}
+      {checkComponents()}
     </div>
   );
 };
