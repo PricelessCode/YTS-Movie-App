@@ -18,11 +18,11 @@ const SearchBar = () => {
   
     try {
       console.log('Requested to the server!')
-          let result = await axios.get('https://yts.mx/api/v2/list_movies.json?sort_by=like_count&order_by=desc&limit=5');
+          let result = await axios.get('http://localhost:4000/movies?sort_by=like_count&order_by=desc&limit=5');
           let tmpMovies = result.data.data.movies;
           
           for (let i = 0; i < result.data.data.movies.length; i++) {
-            let likeObject= await axios.get('https://yts.mx/api/v2/movie_details.json?movie_id=' + tmpMovies[i].id);  
+            let likeObject= await axios.get('http://localhost:4000/likes?movie_id=' + tmpMovies[i].id);  
             tmpMovies[i].likes = likeObject.data.data.movie.like_count;
           }
           
