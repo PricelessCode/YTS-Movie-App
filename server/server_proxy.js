@@ -22,11 +22,13 @@ const createProxyMiddleware = require('http-proxy-middleware');
     createProxyMiddleware('/apw',  {
         target: 'http://api.openweathermap.org/',
         changeOrigin: true,
+        followRedirects: true,
         pathRewrite:{ '^/apw/':'/' }
     }),
     createProxyMiddleware('/api', {
       target: 'https://openapi.naver.com/',
       changeOrigin: true,
+      followRedirects: true,
       pathRewrite:{ '^/api/':'/' }
     }),
 
@@ -35,6 +37,7 @@ const createProxyMiddleware = require('http-proxy-middleware');
       target: 'https://yts.mx/',
       changeOrigin: true,
       pathRewrite:{ '^/movies':'/api/v2/list_movies.json' },
+      followRedirects: true,
       router: {
       //   // when request.headers.host == 'localhost:4000',
       //   // override target 'http://localhost:4000' to 'https://movie-app-2021.herokuapp.com'
@@ -45,6 +48,7 @@ const createProxyMiddleware = require('http-proxy-middleware');
       target: 'https://yts.mx/',
       changeOrigin: true,
       pathRewrite:{ '^/images':'' },
+      followRedirects: true,
       router: {
       //   // when request.headers.host == 'localhost:4000',
       //   // override target 'http://localhost:4000' to 'https://movie-app-2021.herokuapp.com'
@@ -55,6 +59,7 @@ const createProxyMiddleware = require('http-proxy-middleware');
       target: 'https://yts.mx/',
       changeOrigin: true,
       pathRewrite:{ '^/likes':'/api/v2/movie_details.json' },
+      followRedirects: true,
       router: {
       //   // when request.headers.host == 'localhost:4000',
       //   // override target 'http://localhost:4000' to 'https://movie-app-2021.herokuapp.com'
@@ -65,6 +70,7 @@ const createProxyMiddleware = require('http-proxy-middleware');
       target: 'https://img.yts.mx/',
       changeOrigin: true,
       pathRewrite:{ '^/img-yts/':'/' },
+      followRedirects: true,
       router: {
         // when request.headers.host == 'localhost:4000',
         // override target 'http://localhost:4000' to 'https://movie-app-2021.herokuapp.com'
@@ -75,6 +81,7 @@ const createProxyMiddleware = require('http-proxy-middleware');
       target: 'https://yts.mx/',
       changeOrigin: true,
       pathRewrite:{ '^/images':'/assets/images/movies/'},
+      followRedirects: true,
       router: {
       //   // when request.headers.host == 'localhost:4000',
       //   // override target 'http://localhost:4000' to 'https://movie-app-2021.herokuapp.com'

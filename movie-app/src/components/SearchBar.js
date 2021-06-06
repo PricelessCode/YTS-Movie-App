@@ -25,14 +25,25 @@ const SearchBar = () => {
             let proxyImg = 'https://movie-app-20181663.herokuapp.com/images/' + tmpMovies[i].medium_cover_image.match(/assets.*/);
             tmpMovies[i].medium_cover_image = proxyImg;
           }
+            
+          // for (let i = 0; i < tmpMovies.length; i++) {
+          //   let likeObject= await axios.get('https://movie-app-20181663.herokuapp.com/likes?movie_id=' + tmpMovies[i].id);  
+          //   tmpMovies[i].likes = likeObject.data.data.movie.like_count;
+          // }
 
+          let likeList = [];
           for (let i = 0; i < tmpMovies.length; i++) {
-            let likeObject= await axios.get('https://movie-app-20181663.herokuapp.com/likes?movie_id=' + tmpMovies[i].id);  
-            tmpMovies[i].likes = likeObject.data.data.movie.like_count;
+            likeList.push(axios.get('https://movie-app-20181663.herokuapp.com/likes?movie_id=' + tmpMovies[i].id));
           }
           
+          Promise.all(likeList).then(response => {
+            for (let i = 0; i < tmpMovies.length; i++) {
+              tmpMovies[i].likes = response[i].data.data.movie.like_count;
+            }
+          })
+          
           // let result = await axios.get('http://localhost:4000/yts');
-          setMovies(result.data.data.movies);
+          setMovies(tmpMovies);
           console.log(movies);
           setIsLoading(false);
           
