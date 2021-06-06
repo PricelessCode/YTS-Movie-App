@@ -21,7 +21,12 @@ const SearchBar = () => {
           let result = await axios.get('https://movie-app-20181663.herokuapp.com/movies?sort_by=like_count&order_by=desc&limit=5');
           let tmpMovies = result.data.data.movies;
           
-          for (let i = 0; i < result.data.data.movies.length; i++) {
+          for (let i = 0; i < tmpMovies.length; i++) {
+            let proxyImg = 'https://movie-app-20181663.herokuapp.com/images/' + tmpMovies[i].medium_cover_image.match(/assets.*/);
+            tmpMovies[i].medium_cover_image = proxyImg;
+          }
+
+          for (let i = 0; i < tmpMovies.length; i++) {
             let likeObject= await axios.get('https://movie-app-20181663.herokuapp.com/likes?movie_id=' + tmpMovies[i].id);  
             tmpMovies[i].likes = likeObject.data.data.movie.like_count;
           }
